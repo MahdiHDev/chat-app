@@ -3,8 +3,8 @@ import Card from '../components/Card';
 
 const SignUp = () => {
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100 ">
-            <Card className="w-96 bg-white" title="Sign Up">
+        <div className="h-screen flex flex-col justify-center items-center bg-gray-100 ">
+            <Card className="w-screen md:w-96 bg-gray-100" title="Sign Up">
                 <form action="" className="space-y-4 flex flex-col text-sm">
                     <input
                         type="text"

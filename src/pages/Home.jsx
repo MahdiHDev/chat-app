@@ -8,17 +8,67 @@ const Home = () => {
     const [activeChat, setActiveChat] = useState(null);
 
     const chats = [
-        { name: 'Nana', message: 'Modon o jaitam kunbay', time: '10:49 am' },
-        { name: 'Genius DTF', message: 'একটাই নিতে হবে।', time: '9:16 am' },
-        { name: 'Kuki', message: 'You reacted 😂.', time: '1:35 am' },
-        { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-        { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-        { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-        { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-        { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-        { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-        { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-        { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
+        {
+            name: 'Nana',
+            message: 'Modon o jaitam kunbay',
+            time: '10:49 am',
+            image: logo,
+        },
+        {
+            name: 'Genius DTF',
+            message: 'একটাই নিতে হবে।',
+            time: '9:16 am',
+            image: logo,
+        },
+        { name: 'Kuki', message: 'You reacted 😂.', time: '1:35 am', image: logo, },
+        {
+            name: 'Ashraful SPI',
+            message: 'Kunta na vai',
+            time: '12:15 am',
+            image: logo,
+        },
+        {
+            name: 'Ashraful SPI',
+            message: 'Kunta na vai',
+            time: '12:15 am',
+            image: logo,
+        },
+        {
+            name: 'Ashraful SPI',
+            message: 'Kunta na vai',
+            time: '12:15 am',
+            image: logo,
+        },
+        {
+            name: 'Ashraful SPI',
+            message: 'Kunta na vai',
+            time: '12:15 am',
+            image: logo,
+        },
+        {
+            name: 'Ashraful SPI',
+            message: 'Kunta na vai',
+            time: '12:15 am',
+            image: logo,
+        },
+        {
+            name: 'Ashraful SPI',
+            message: 'Kunta na vai',
+            time: '12:15 am',
+            image: logo,
+        },
+        {
+            name: 'Ashraful SPI',
+            message: 'Kunta na vai',
+            time: '12:15 am',
+            image: logo,
+        },
+        {
+            name: 'Ashraful SPI',
+            message: 'Kunta na vai',
+            time: '12:15 am',
+            image: logo,
+        },
         { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
         { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
         { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
@@ -52,15 +102,22 @@ const Home = () => {
                         <div
                             key={idx}
                             onClick={() => setActiveChat(chat)}
-                            className="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-gray-300 hover:text-white cursor-pointer"
+                            className="flex justify-between items-center px-3 py-2 hover:bg-gray-300 hover:text-white cursor-pointer border-b border-gray-200"
                         >
-                            <div>
-                                <div className="font-bold">{chat.name}</div>
-                                <div className="text-sm text-gray-500">
-                                    {chat.message}
-                                </div>
-                                <div className="text-xs text-gray-600">
-                                    {chat.time}
+                            <div className="flex items-center gap-3">
+                                <img
+                                    className="w-12 h-12 rounded-full border border-gray-300"
+                                    src={chat.image}
+                                    alt=""
+                                />
+                                <div>
+                                    <div className="font-bold">{chat.name}</div>
+                                    <div className="text-sm text-gray-500">
+                                        {chat.message}
+                                    </div>
+                                    <div className="text-xs text-gray-600">
+                                        {chat.time}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -77,7 +134,7 @@ const Home = () => {
                 {activeChat && (
                     <>
                         {/* Header  */}
-                        <header className="flex gap-4 items-center p-3 border-b border-gray-200 bg-gray-200">
+                        <header className="flex gap-4 items-center p-3 border-b border-gray-200 bg-gray-200 sticky top-0">
                             <FaArrowLeft
                                 className="cursor-pointer h-10"
                                 onClick={() => setActiveChat(null)}
@@ -118,7 +175,25 @@ const Home = () => {
                                     </p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="inline-block bg-gray-800 text-white px-4 py-2 rounded-lg shadow-md max-w-96 lg:max-w-100">
+                                    <p className="inline-block bg-gray-800 text-white px-4 py-2 rounded-lg shadow-md max-w-70 lg:max-w-100">
+                                        Lorem ipsum dolor sit, amet consectetur
+                                        adipisicing elit. Ipsum numquam natus
+                                        tempore veritatis, aperiam eaque, dolore
+                                        error saepe animi ex nobis vero? Labore
+                                        sint dignissimos, debitis minima
+                                        blanditiis fugiat aliquam fugit
+                                        consequuntur quis! Aperiam, totam quo
+                                        ratione aliquid excepturi sapiente
+                                        deleniti provident voluptate minus
+                                        inventore praesentium aliquam voluptates
+                                        ipsam laboriosam?{' '}
+                                        <span className="text-[9px]">
+                                            11: 30 am
+                                        </span>
+                                    </p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="inline-block bg-gray-800 text-white px-4 py-2 rounded-lg shadow-md max-w-70 lg:max-w-100">
                                         Lorem ipsum dolor sit, amet consectetur
                                         adipisicing elit. Ipsum numquam natus
                                         tempore veritatis, aperiam eaque, dolore
@@ -139,7 +214,7 @@ const Home = () => {
                         </div>
 
                         {/* Send message area */}
-                        <div className="p-3 pb-5 border-t border-r-gray-700 bg-gray-800">
+                        <div className="p-3 pb-5 border-t border-r-gray-700 bg-gray-800 sticky bottom-0">
                             <form
                                 action=""
                                 className="text-white flex items-center text-sm gap-1"
@@ -147,17 +222,22 @@ const Home = () => {
                                 <input
                                     type="text"
                                     placeholder="Send Message"
-                                    className="flex-1 p-1 text-white border border-gray-300 outline-0 rounded-sm"
+                                    className="flex-1 px-4 py-1 text-white border border-gray-500 outline-0 rounded-xl"
                                 />
                                 <button
                                     type="submit"
-                                    className="p-1 bg-gray-500 w-15 flex justify-center rounded-sm"
+                                    className="h-8 w-8 bg-gray-500 flex justify-center items-center rounded-full"
                                 >
-                                    <IoMdSend className="text-[24px] text-center" />
+                                    <IoMdSend className="text-lg text-center" />
                                 </button>
                             </form>
                         </div>
                     </>
+                )}
+                {!activeChat && (
+                    <div className="flex items-center justify-center h-full text-gray-400">
+                        Select a chat to start messaging
+                    </div>
                 )}
             </main>
         </div>

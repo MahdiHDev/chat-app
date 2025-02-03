@@ -4,7 +4,10 @@ import Card from '../components/Card';
 const Login = () => {
     return (
         <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
-            <Card className="w-96" title="Login">
+            <Card
+                className="w-screen md:w-96 bg-gray-100 md:bg-white"
+                title="Login"
+            >
                 <form action="" className="space-y-4 flex flex-col text-sm">
                     <input
                         type="text"
