@@ -1,6 +1,9 @@
 import axios from 'axios';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Card from '../components/Card';
 
 const Login = () => {
@@ -8,6 +11,15 @@ const Login = () => {
         emailOrMobile: '',
         password: '',
     });
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = Cookies.get('token');
+        if (token) {
+            localStorage.setItem('token', token);
+            navigate('/');
+        }
+    }, [navigate]);
 
     const handleInput = (e) => {
         setFormValue({
@@ -21,8 +33,16 @@ const Login = () => {
         try {
             const response = await axios.post(
                 'http://localhost:3000/auth/login',
-                formValue
+                formValue,
+                { withCredentials: true }
             );
+
+            if (response.status === 200) {
+                toast.success(
+                    'Login successful! Redirecting to the homepage...'
+                );
+                navigate('/');
+            }
             console.log(response.data);
         } catch (err) {
             console.log(err.message);
@@ -74,6 +94,8 @@ const Login = () => {
                     </Link>
                 </div>
             </Card>
+
+            <ToastContainer />
         </div>
     );
 };
