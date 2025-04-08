@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { IoMdSend } from 'react-icons/io';
 import { IoSearchOutline } from 'react-icons/io5';
@@ -8,6 +9,31 @@ import logo from '../../public/user1.png';
 const Home = () => {
     const [activeChat, setActiveChat] = useState(null);
     const [showSearch, setShowSearch] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
+
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (searchValue.trim() !== '') {
+                getUser(searchValue);
+            } else {
+                setSearchResult([]);
+            }
+        }, 500); // wait 500ms after user stops typing
+
+        return () => clearTimeout(delayDebounce);
+    }, [searchValue]);
+
+    const getUser = async (query) => {
+        try {
+            const res = await axios.get(
+                `http://localhost:3000/user/searchUser?query=${query}`
+            );
+            setSearchResult(res.data);
+        } catch (error) {
+            console.log('Failed to fetch users', error);
+        }
+    };
 
     const chats = [
         {
@@ -99,14 +125,52 @@ const Home = () => {
                 }`}
             >
                 <div className="flex justify-between items-center p-3 border-b border-gray-200 relative">
-                    <div className="absolute top-[20%] bg-white z-[999] w-[90%]">
+                    <div
+                        className={`absolute top-[20%] bg-white z-[999] w-[85%] ${
+                            showSearch ? 'block' : 'hidden'
+                        }`}
+                    >
                         <input
-                            className={`w-full px-4 py-1 outline-0 border-0 ${
-                                showSearch ? 'block' : 'hidden'
-                            }`}
+                            className={`w-full px-4 py-1 outline-0 border-0 border-b border-[#666]`}
                             type="text"
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
                             placeholder="Search User by username or Mobile number"
                         />
+
+                        <div className="box shadow-2xl p-4 rounded-md">
+                            <div>
+                                {searchResult.length > 0 ? (
+                                    searchResult.map((user, idx) => (
+                                        <div
+                                            key={idx}
+                                            className="flex items-center gap-3 pt-2 border-b border-[#666] py-1"
+                                        >
+                                            <img
+                                                className="w-12 h-12 rounded-full border border-gray-300"
+                                                src={user.avatar}
+                                                alt=""
+                                            />
+                                            <div>
+                                                <div className="font-bold">
+                                                    {user.name}
+                                                </div>
+                                                {/* <div className="text-sm text-gray-500">
+                                                message
+                                            </div>
+                                            <div className="text-xs text-gray-600">
+                                                time
+                                            </div> */}
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-center text-[#666] p-4">
+                                        No user found
+                                    </p>
+                                )}
+                            </div>
+                        </div>
                     </div>
                     <div className="font-bold text-lg">Chats</div>
                     <button
