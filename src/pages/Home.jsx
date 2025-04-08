@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { IoMdSend } from 'react-icons/io';
 import { IoSearchOutline } from 'react-icons/io5';
+import { RxCross1 } from 'react-icons/rx';
 import logo from '../../public/user1.png';
 
 const Home = () => {
     const [activeChat, setActiveChat] = useState(null);
+    const [showSearch, setShowSearch] = useState(false);
 
     const chats = [
         {
@@ -20,7 +22,12 @@ const Home = () => {
             time: '9:16 am',
             image: logo,
         },
-        { name: 'Kuki', message: 'You reacted 😂.', time: '1:35 am', image: logo, },
+        {
+            name: 'Kuki',
+            message: 'You reacted 😂.',
+            time: '1:35 am',
+            image: logo,
+        },
         {
             name: 'Ashraful SPI',
             message: 'Kunta na vai',
@@ -91,11 +98,27 @@ const Home = () => {
                     activeChat === null ? 'block' : 'hidden md:block'
                 }`}
             >
-                <div className="flex justify-between items-center p-3 border-b border-gray-200">
-                    <div className="font-bold text-lg">Chats</div>
-                    <div className="flex gap-2">
-                        <IoSearchOutline className="w-5 h-5cursor-pointer" />
+                <div className="flex justify-between items-center p-3 border-b border-gray-200 relative">
+                    <div className="absolute top-[20%] bg-white z-[999] w-[90%]">
+                        <input
+                            className={`w-full px-4 py-1 outline-0 border-0 ${
+                                showSearch ? 'block' : 'hidden'
+                            }`}
+                            type="text"
+                            placeholder="Search User by username or Mobile number"
+                        />
                     </div>
+                    <div className="font-bold text-lg">Chats</div>
+                    <button
+                        onClick={() => setShowSearch(!showSearch)}
+                        className="flex gap-2"
+                    >
+                        {showSearch ? (
+                            <RxCross1 className="w-5 h-5 cursor-pointer" />
+                        ) : (
+                            <IoSearchOutline className="w-5 h-5 cursor-pointer" />
+                        )}
+                    </button>
                 </div>
                 <div>
                     {chats.map((chat, idx) => (
