@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Card from '../components/Card';
@@ -13,6 +14,16 @@ const SignUp = () => {
         password: '',
         confirmPassword: '',
     });
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = Cookies.get('token');
+        if (token) {
+            localStorage.setItem('token', token);
+            navigate('/');
+        }
+    }, [navigate]);
 
     // const [error, setError] = useState('');
 

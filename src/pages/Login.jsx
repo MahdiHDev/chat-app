@@ -11,6 +11,7 @@ const Login = () => {
         emailOrMobile: '',
         password: '',
     });
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -40,6 +41,10 @@ const Login = () => {
             if (response.status === 200) {
                 toast.success(
                     'Login successful! Redirecting to the homepage...'
+                );
+                localStorage.setItem(
+                    'user',
+                    JSON.stringify(response.data.user)
                 );
                 navigate('/');
             }
