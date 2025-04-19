@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
 
 const ChatContext = createContext();
 
@@ -8,11 +8,19 @@ export const ChatProvider = ({ children }) => {
     const [chats, setChats] = useState([]);
     const [messages, setMessages] = useState([]);
 
+    useEffect(() => {
+        const getUser = async () => {
+            const fetchUser = JSON.parse(localStorage.getItem("user"));
+            setUser(fetchUser);
+        };
+
+        getUser();
+    }, []);
+
     return (
         <ChatContext.Provider
             value={{
                 user,
-                setUser,
                 selectedChat,
                 setSelectedChat,
                 chats,

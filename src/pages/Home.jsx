@@ -1,32 +1,53 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { FaArrowLeft } from 'react-icons/fa';
-import { IoMdSend } from 'react-icons/io';
-import { IoSearchOutline } from 'react-icons/io5';
-import { RxCross1 } from 'react-icons/rx';
-import logo from '../../public/user1.png';
-import { useChat } from '../context/ChatContext';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa";
+import { IoMdSend } from "react-icons/io";
+import { IoSearchOutline } from "react-icons/io5";
+import { RxCross1 } from "react-icons/rx";
+import logo from "../../public/user1.png";
+import { useChat } from "../context/ChatContext";
 
 const Home = () => {
-    const { chats, setChats, user, setUser } = useChat();
+    const { chats, setChats, user } = useChat();
 
     const [activeChat, setActiveChat] = useState(null);
     const [showSearch, setShowSearch] = useState(false);
-    const [searchValue, setSearchValue] = useState('');
+    const [searchValue, setSearchValue] = useState("");
     const [searchResult, setSearchResult] = useState([]);
 
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
-            if (searchValue.trim() !== '') {
+            if (searchValue.trim() !== "") {
                 getUser(searchValue);
             } else {
                 setSearchResult([]);
             }
         }, 500); // wait 500ms after user stops typing
 
+        const getMessages = async () => {
+            if (user) {
+                try {
+                    const res = await axios.get(
+                        `http://localhost:3000/chat/converstion?userId=${user._id}`
+                    );
+
+                    setChats(res.data);
+                } catch (error) {
+                    console.log("Failed to fetch chats", error);
+                    if (error.response) {
+                        console.log(
+                            "Error from backend:",
+                            error.response.data.message
+                        );
+                    }
+                }
+            }
+        };
+
         getMessages();
+
         return () => clearTimeout(delayDebounce);
-    }, [searchValue]);
+    }, [searchValue, user]);
 
     // const getUser = async (query) => {
     //     try {
@@ -46,28 +67,9 @@ const Home = () => {
     //     }
     // };
 
-    const getMessages = async () => {
-        const fetchUser  = JSON.parse(localStorage.getItem('user'));
-        setUser(fetchUser)
-
-        try {
-            const res = await axios.get(
-                `http://localhost:3000/chat/converstion?userId=${user._id}`
-            );
-
-            setChats(res.data);
-            console.log(chats);
-        } catch (error) {
-            console.log('Failed to fetch chats', error);
-            if (error.response) {
-                console.log('Error from backend:', error.response.data.message);
-            }
-        }
-    };
-
     const getUser = async (query) => {
-        const token = localStorage.getItem('token');
-        console.log('Token from localStorage:', token); // Debugging
+        const token = localStorage.getItem("token");
+        console.log("Token from localStorage:", token); // Debugging
 
         try {
             const res = await axios.get(
@@ -80,9 +82,9 @@ const Home = () => {
             );
             setSearchResult(res.data);
         } catch (error) {
-            console.log('Failed to fetch users', error);
+            console.log("Failed to fetch users", error);
             if (error.response) {
-                console.log('Error from backend:', error.response.data.message);
+                console.log("Error from backend:", error.response.data.message);
             }
         }
     };
@@ -172,14 +174,14 @@ const Home = () => {
         <div className="h-screen flex flex-col md:flex-row md:p-5 lg:p-10">
             {/* Sidebar  */}
             <aside
-                className={`md:w-1/4 border-r border-gray-300 p-2 overflow-y-auto scrollbar scrollbar-thin flex flex-col transition-transform duration-300 border-y border-l shadow-xl rounded-md rounded-r-none ${
-                    activeChat === null ? 'block' : 'hidden md:block'
+                className={`md:w-1/4 border-r border-gray-300 p-2 overflow-y-auto scrollbar scrollbar-thin flex flex-col transition-transform duration-300 border-y border-l rounded-md rounded-r-none ${
+                    activeChat === null ? "block" : "hidden md:block"
                 }`}
             >
                 <div className="flex justify-between items-center p-3 border-b border-gray-200 relative">
                     <div
                         className={`absolute top-[20%] bg-white z-[999] w-[85%] ${
-                            showSearch ? 'block' : 'hidden'
+                            showSearch ? "block" : "hidden"
                         }`}
                     >
                         <input
@@ -266,8 +268,8 @@ const Home = () => {
 
             {/* Chat Window  */}
             <main
-                className={`flex-1 flex flex-col transition-transform duration-300 border border-l-0 border-gray-300 shadow-xl rounded-md rounded-l-none ${
-                    activeChat === null ? 'hidden md:flex' : 'flex'
+                className={`flex-1 flex flex-col transition-transform duration-300 border border-l-0 border-gray-300 rounded-md rounded-l-none ${
+                    activeChat === null ? "hidden md:flex" : "flex"
                 }`}
             >
                 {activeChat && (
@@ -299,7 +301,7 @@ const Home = () => {
                             <div className="space-y-4">
                                 <div className="text-right">
                                     <div className="inline-block bg-gray-800 text-white px-4 py-2 rounded-lg shadow-md">
-                                        Koi{' '}
+                                        Koi{" "}
                                         <span className="text-[9px]">
                                             11: 30 am
                                         </span>
@@ -307,7 +309,7 @@ const Home = () => {
                                 </div>
                                 <div className="text-left">
                                     <p className="inline-block bg-gray-300 text-black px-4 py-2 rounded-lg shadow-md">
-                                        Goro kene{' '}
+                                        Goro kene{" "}
                                         <span className="text-[9px]">
                                             11: 30 am
                                         </span>
@@ -325,7 +327,7 @@ const Home = () => {
                                         ratione aliquid excepturi sapiente
                                         deleniti provident voluptate minus
                                         inventore praesentium aliquam voluptates
-                                        ipsam laboriosam?{' '}
+                                        ipsam laboriosam?{" "}
                                         <span className="text-[9px]">
                                             11: 30 am
                                         </span>
@@ -343,7 +345,7 @@ const Home = () => {
                                         ratione aliquid excepturi sapiente
                                         deleniti provident voluptate minus
                                         inventore praesentium aliquam voluptates
-                                        ipsam laboriosam?{' '}
+                                        ipsam laboriosam?{" "}
                                         <span className="text-[9px]">
                                             11: 30 am
                                         </span>
