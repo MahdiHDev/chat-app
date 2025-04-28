@@ -4,11 +4,13 @@ import { FaArrowLeft } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
-import logo from "../../public/user1.png";
 import { useChat } from "../context/ChatContext";
+import { format, isToday, isYesterday, isThisWeek } from "date-fns";
+import { useSocket } from "../context/SocketContext";
 
 const Home = () => {
     const { chats, setChats, user } = useChat();
+    const socket = useSocket();
 
     const [activeChat, setActiveChat] = useState(null);
     const [showSearch, setShowSearch] = useState(false);
@@ -24,48 +26,38 @@ const Home = () => {
             }
         }, 500); // wait 500ms after user stops typing
 
-        const getMessages = async () => {
-            if (user) {
-                try {
-                    const res = await axios.get(
-                        `http://localhost:3000/chat/converstion?userId=${user._id}`
-                    );
-
-                    setChats(res.data);
-                } catch (error) {
-                    console.log("Failed to fetch chats", error);
-                    if (error.response) {
-                        console.log(
-                            "Error from backend:",
-                            error.response.data.message
-                        );
-                    }
-                }
-            }
-        };
-
         getMessages();
+
+        if (socket) {
+            socket.on("new_conversation", (newChat) => {
+                console.log("New conversation recived: ", newChat);
+                setChats((prevChats) => [newChat, ...prevChats]);
+            });
+        }
 
         return () => clearTimeout(delayDebounce);
     }, [searchValue, user]);
 
-    // const getUser = async (query) => {
-    //     try {
-    //         const res = await axios.get(
-    //             `http://localhost:3000/user/searchUser?query=${query}`,
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${localStorage.getItem(
-    //                         'token'
-    //                     )}`,
-    //                 },
-    //             }
-    //         );
-    //         setSearchResult(res.data);
-    //     } catch (error) {
-    //         console.log('Failed to fetch users', error);
-    //     }
-    // };
+    const getMessages = async () => {
+        if (user) {
+            try {
+                const res = await axios.get(
+                    `http://localhost:3000/chat/conversation?userId=${user._id}`
+                );
+                console.log(res.data);
+
+                setChats(res.data);
+            } catch (error) {
+                console.log("Failed to fetch chats", error);
+                if (error.response) {
+                    console.log(
+                        "Error from backend:",
+                        error.response.data.message
+                    );
+                }
+            }
+        }
+    };
 
     const getUser = async (query) => {
         const token = localStorage.getItem("token");
@@ -81,11 +73,34 @@ const Home = () => {
                 }
             );
             setSearchResult(res.data);
+            console.log(searchResult);
         } catch (error) {
             console.log("Failed to fetch users", error);
             if (error.response) {
                 console.log("Error from backend:", error.response.data.message);
             }
+        }
+    };
+
+    const createConversation = async (participantId) => {
+        try {
+            const response = await axios.post(
+                "http://localhost:3000/chat/conversation",
+                {
+                    creator: user._id,
+                    participant: participantId,
+                }
+            );
+
+            // Emit socket event
+            if (socket) {
+                socket.emit("new_conversation", response.data);
+            }
+
+            setActiveChat(response.data);
+            console.log("Conversation created/fetched:", response.data);
+        } catch (error) {
+            console.log("Failed to create convesation", error);
         }
     };
 
@@ -108,67 +123,25 @@ const Home = () => {
     //         time: '1:35 am',
     //         image: logo,
     //     },
-    //     {
-    //         name: 'Ashraful SPI',
-    //         message: 'Kunta na vai',
-    //         time: '12:15 am',
-    //         image: logo,
-    //     },
-    //     {
-    //         name: 'Ashraful SPI',
-    //         message: 'Kunta na vai',
-    //         time: '12:15 am',
-    //         image: logo,
-    //     },
-    //     {
-    //         name: 'Ashraful SPI',
-    //         message: 'Kunta na vai',
-    //         time: '12:15 am',
-    //         image: logo,
-    //     },
-    //     {
-    //         name: 'Ashraful SPI',
-    //         message: 'Kunta na vai',
-    //         time: '12:15 am',
-    //         image: logo,
-    //     },
-    //     {
-    //         name: 'Ashraful SPI',
-    //         message: 'Kunta na vai',
-    //         time: '12:15 am',
-    //         image: logo,
-    //     },
-    //     {
-    //         name: 'Ashraful SPI',
-    //         message: 'Kunta na vai',
-    //         time: '12:15 am',
-    //         image: logo,
-    //     },
-    //     {
-    //         name: 'Ashraful SPI',
-    //         message: 'Kunta na vai',
-    //         time: '12:15 am',
-    //         image: logo,
-    //     },
-    //     {
-    //         name: 'Ashraful SPI',
-    //         message: 'Kunta na vai',
-    //         time: '12:15 am',
-    //         image: logo,
-    //     },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
-    //     { name: 'Ashraful SPI', message: 'Kunta na vai', time: '12:15 am' },
     // ];
+
+    const formatChatTime = (timestamps) => {
+        const date = new Date(timestamps);
+
+        if (isToday(date)) {
+            return format(date, "p");
+        }
+
+        if (isYesterday(date)) {
+            return "Yesterday";
+        }
+
+        if (isThisWeek(date)) {
+            return format(date, "EEE");
+        }
+
+        return format(date, "MM/dd/yyyy");
+    };
 
     return (
         <div className="h-screen flex flex-col md:flex-row md:p-5 lg:p-10">
@@ -198,7 +171,10 @@ const Home = () => {
                                     searchResult.map((user, idx) => (
                                         <div
                                             key={idx}
-                                            className="flex items-center gap-3 pt-2 border-b border-[#666] py-1"
+                                            className="flex items-center gap-3 pt-2 border-b border-[#666] py-1 cursor-pointer"
+                                            onClick={() =>
+                                                createConversation(user._id)
+                                            }
                                         >
                                             <img
                                                 className="w-12 h-12 rounded-full border border-gray-300"
@@ -254,11 +230,13 @@ const Home = () => {
                                 <div>
                                     <div className="font-bold">{chat.name}</div>
                                     <div className="text-sm text-gray-500">
-                                        {chat.participant.name}
+                                        {user._id === chat.creator._id
+                                            ? chat.participant.name
+                                            : chat.creator.name}
                                     </div>
-                                    {/* <div className="text-xs text-gray-600">
-                                        {chat.time}
-                                    </div> */}
+                                    <div className="text-xs text-gray-600">
+                                        {formatChatTime(chat.last_updated)}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -283,13 +261,15 @@ const Home = () => {
                             <div>
                                 <img
                                     className="h-12 border border-black p-1 rounded-full"
-                                    src={logo}
+                                    src={activeChat.creator.avatar}
                                     alt="profile"
                                 />
                             </div>
                             <div>
                                 <div className="font-bold">
-                                    {activeChat.name}
+                                    {user._id === activeChat.participant._id
+                                        ? activeChat.creator.name
+                                        : activeChat.participant.name}
                                 </div>
                                 <div className="text-sm text-gray-500">
                                     last seen today at 11:44 am

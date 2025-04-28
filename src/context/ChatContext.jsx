@@ -15,7 +15,7 @@ export const ChatProvider = ({ children }) => {
         };
 
         getUser();
-    }, []);
+    }, [setUser]);
 
     return (
         <ChatContext.Provider
