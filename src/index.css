@@ -1,15 +1,19 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 /* @import 'tailwind-scrollbar'; Import the scrollbar plugin */
 
-body {
-    font-family: 'Open Sans', serif;
+@theme {
+    --shadow-box: 0 0 12px rgba(0, 0, 0, 0.2);
 }
 
-input[type='file'] {
+body {
+    font-family: "Open Sans", serif;
+}
+
+input[type="file"] {
     font-weight: normal;
 }
 
-input[type='file']::-webkit-file-upload-button {
+input[type="file"]::-webkit-file-upload-button {
     font-weight: bold;
 }
 

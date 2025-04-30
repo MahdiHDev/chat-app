@@ -9,13 +9,14 @@ export const ChatProvider = ({ children }) => {
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
-        const getUser = async () => {
-            const fetchUser = JSON.parse(localStorage.getItem("user"));
-            setUser(fetchUser);
-        };
-
-        getUser();
-    }, [setUser]);
+        if (!user) {
+            const userdata = localStorage.getItem("user");
+            const parsedUser = JSON.parse(userdata);
+            if (parsedUser && typeof parsedUser === "object") {
+                setUser(() => parsedUser);
+            }
+        }
+    }, [user]);
 
     return (
         <ChatContext.Provider
@@ -27,6 +28,7 @@ export const ChatProvider = ({ children }) => {
                 setChats,
                 messages,
                 setMessages,
+                setUser,
             }}
         >
             {children}

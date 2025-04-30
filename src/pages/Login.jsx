@@ -1,26 +1,20 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Card from '../components/Card';
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Card from "../components/Card";
+import { useChat } from "../context/ChatContext";
 
 const Login = () => {
+    const { setUser } = useChat();
     const [formValue, setFormValue] = useState({
-        emailOrMobile: '',
-        password: '',
+        emailOrMobile: "",
+        password: "",
     });
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const token = Cookies.get('token');
-        if (token) {
-            localStorage.setItem('token', token);
-            navigate('/');
-        }
-    }, [navigate]);
 
     const handleInput = (e) => {
         setFormValue({
@@ -33,20 +27,25 @@ const Login = () => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                'http://localhost:3000/auth/login',
+                "http://localhost:3000/auth/login",
                 formValue,
                 { withCredentials: true }
             );
 
             if (response.status === 200) {
                 toast.success(
-                    'Login successful! Redirecting to the homepage...'
+                    "Login successful! Redirecting to the homepage..."
                 );
                 localStorage.setItem(
-                    'user',
+                    "user",
                     JSON.stringify(response.data.user)
                 );
-                navigate('/');
+                localStorage.setItem(
+                    "token",
+                    JSON.stringify(response.data.token)
+                );
+                setUser(() => response.data.user);
+                navigate("/");
             }
             console.log(response.data);
         } catch (err) {
@@ -90,7 +89,7 @@ const Login = () => {
                 </form>
 
                 <div className="text-sm py-2">
-                    Don&apos;t have an account.{' '}
+                    Don&apos;t have an account.{" "}
                     <Link
                         to="/sign-up"
                         className="text-green-500 hover:underline hover:text-gray-500"
