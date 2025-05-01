@@ -1,11 +1,11 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Card from "../components/Card";
 import { useChat } from "../context/ChatContext";
+import Cookies from "js-cookie";
 
 const Login = () => {
     const { setUser } = useChat();
@@ -13,8 +13,15 @@ const Login = () => {
         emailOrMobile: "",
         password: "",
     });
-
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = Cookies.get("token");
+        if (token) {
+            localStorage.setItem("token", token);
+            navigate("/");
+        }
+    }, [navigate]);
 
     const handleInput = (e) => {
         setFormValue({

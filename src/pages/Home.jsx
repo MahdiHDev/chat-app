@@ -3,10 +3,13 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
+import { CiLogout } from "react-icons/ci";
 import { RxCross1 } from "react-icons/rx";
 import { useChat } from "../context/ChatContext";
 import { format, isToday, isYesterday, isThisWeek } from "date-fns";
 import { useSocket } from "../context/SocketContext";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
     const { chats, setChats, user } = useChat();
@@ -16,6 +19,7 @@ const Home = () => {
     const [showSearch, setShowSearch] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [searchResult, setSearchResult] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
@@ -117,6 +121,14 @@ const Home = () => {
         }
     };
 
+    const logoutHandler = () => {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        Cookies.remove("token");
+
+        navigate("/login");
+    };
+
     // const chats = [
     //     {
     //         name: 'Nana',
@@ -161,11 +173,11 @@ const Home = () => {
             <div className="rounded-xl  shadow-box flex flex-col md:flex-row md:p-5 lg:p-0 shrink-0 w-[90%] h-[90vh] border border-gray-300">
                 {/* Sidebar  */}
                 <aside
-                    className={`md:w-1/4 p-2 overflow-y-auto scrollbar scrollbar-thin flex flex-col transition-transform duration-300 rounded-md rounded-r-none ${
+                    className={`md:w-1/4 p-2 h-full flex flex-col transition-transform duration-300 rounded-md rounded-r-none ${
                         activeChat === null ? "block" : "hidden md:block"
                     }`}
                 >
-                    <div className="flex justify-between items-center p-3 border-b border-gray-200 relative">
+                    <div className="shrink-0 flex justify-between items-center p-3 border-b border-gray-200 relative">
                         <div
                             className={`absolute top-[20%] bg-white z-[999] w-[85%] ${
                                 showSearch ? "block" : "hidden"
@@ -231,7 +243,7 @@ const Home = () => {
                             )}
                         </button>
                     </div>
-                    <div>
+                    <div className="overflow-y-auto scrollbar scrollbar-thin">
                         {chats.map((chat, idx) => (
                             <div
                                 key={idx}
@@ -262,6 +274,32 @@ const Home = () => {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                    <div className="mt-auto shrink-0 flex items-center justify-between p-3 border-t border-gray-300 bg-white">
+                        {user && (
+                            <div className="flex items-center gap-3">
+                                <img
+                                    src={user.avatar}
+                                    alt="User Avatar"
+                                    className="w-10 h-10 rounded-full border border-gray-300"
+                                />
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-semibold text-gray-800">
+                                        {user.name}
+                                    </span>
+                                    <span className="text-xs text-gray-500">
+                                        {user.email}
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+                        <button
+                            className="text-gray-500 hover:text-red-500 transition-colors"
+                            title="Logout"
+                            onClick={logoutHandler}
+                        >
+                            <CiLogout className="w-6 h-6" />
+                        </button>
                     </div>
                 </aside>
 

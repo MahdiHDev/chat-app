@@ -7,16 +7,23 @@ export const ChatProvider = ({ children }) => {
     const [selectedChat, setSelectedChat] = useState(null);
     const [chats, setChats] = useState([]);
     const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!user) {
-            const userdata = localStorage.getItem("user");
-            const parsedUser = JSON.parse(userdata);
-            if (parsedUser && typeof parsedUser === "object") {
-                setUser(() => parsedUser);
+        const fetchUser = async () => {
+            try {
+                const storedUser = JSON.parse(localStorage.getItem("user"));
+                if (storedUser) {
+                    setUser(storedUser);
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
             }
-        }
-    }, [user]);
+        };
+        fetchUser();
+    }, []);
 
     return (
         <ChatContext.Provider
@@ -29,6 +36,7 @@ export const ChatProvider = ({ children }) => {
                 messages,
                 setMessages,
                 setUser,
+                loading,
             }}
         >
             {children}
